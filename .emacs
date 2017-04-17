@@ -219,7 +219,7 @@
 
 ;; Font
 
-(set-face-attribute 'default nil :font "Fira Mono for Powerline" )
+(set-face-attribute 'default nil :font "Fira Code")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
