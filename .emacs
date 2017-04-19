@@ -29,7 +29,7 @@
 (evil-mode 0)
 
 ;; Theme load
-(load-theme 'base16-mocha t)
+(load-theme 'base16-3024 t)
 ;;(setq badwolf-diff-hl-inverse t)
 
 ;; Flycheck
@@ -191,7 +191,8 @@
 (setq powerline-height 20)
 (setq powerline-raw " ")
 (setq ns-use-srgb-colorspace nil)
-(setq powerline-arrow-shape 'arrow)
+(setq powerline-arrow-shape 'curve)
+(setq powerline-default-separator-dir '(right . left))
 
 (require 'font-lock+)
 (require 'all-the-icons)
@@ -219,7 +220,9 @@
 
 ;; Font
 
-(set-face-attribute 'default nil :font "Fira Code")
+(set-face-attribute 'default nil :font "Inconsolata for Powerline")
+
+(set-face-attribute 'default nil :height 115)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -235,7 +238,8 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
 	 (quote
-		("85e6bb2425cbfeed2f2b367246ad11a62fb0f6d525c157038a0d0eaaabc1bfee" "d5b121d69e48e0f2a84c8e4580f0ba230423391a78fcb4001ccb35d02494d79e" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d9129a8d924c4254607b5ded46350d68cc00b6e38c39fc137c3cfb7506702c12" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "b97a01622103266c1a26a032567e02d920b2c697ff69d40b7d9956821ab666cc" default)))
+		("3de3f36a398d2c8a4796360bfce1fa515292e9f76b655bb9a377289a6a80a132" "eae831de756bb480240479794e85f1da0789c6f2f7746e5cc999370bbc8d9c8a" "85e6bb2425cbfeed2f2b367246ad11a62fb0f6d525c157038a0d0eaaabc1bfee" "d5b121d69e48e0f2a84c8e4580f0ba230423391a78fcb4001ccb35d02494d79e" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d9129a8d924c4254607b5ded46350d68cc00b6e38c39fc137c3cfb7506702c12" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "b97a01622103266c1a26a032567e02d920b2c697ff69d40b7d9956821ab666cc" default)))
+ '(global-git-gutter+-mode t)
  '(helm-mode t)
  '(package-selected-packages
 	 (quote
