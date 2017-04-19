@@ -29,42 +29,40 @@
 (evil-mode 0)
 
 ;; Theme load
-(load-theme 'base16-3024 t)
+(load-theme 'base16-materia t)
 ;;(setq badwolf-diff-hl-inverse t)
 
-;; Flycheck
+;; Direx
+(global-set-key [f8] 'direx:jump-to-directory)
 
 
-;; Ranger
-(global-set-key [f8] 'ranger)
-(setq ranger-cleanup-eagerly t)
-(setq ranger-parent-depth 1)
-;(push '("^\*ranger .+\*$" :regexp t) popwin:special-display-config)
-;(push '("^\*ranger-.+\*$" :regexp t) popwin:special-display-config)
+;; Ranger / Neotree
+;; (global-set-key [f8] 'neotree-toggle)
+;; (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+;; (add-hook 'text-mode-hook '(lambda ()
+;;     (setq truncate-lines nil
+;;           word-wrap t)))
+;; (add-hook 'prog-mode-hook '(lambda ()
+;;     (setq truncate-lines t
+;;           word-wrap nil)))
+;; ===================================== ORG MODE ==================================;;
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(setq org-todo-keywords
+			'((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+(setq org-todo-keyword-faces
+			'(("TODO" . "violet")
+				("IN-PROGRESS" . "yellow")
+				("WAITING" . "orange")
+				("|" . "aqua")
+				("CANCELED" . "red")
+				("DONE" . "green")))
+
 
 ;; Line wrapping
 (setq word-wrap          t) ;; переносить по словам
 (global-visual-line-mode t)
 
-;; Auto-Complete
-(defun ac-init()
-    (require 'auto-complete-config)
-    (ac-config-default)
-    (setq ac-auto-start        t)
-    (setq ac-auto-show-menu    t)
-    (global-auto-complete-mode t)
-    (add-to-list 'ac-modes   'lisp-mode)
-		(add-to-list 'ac-modes   'coffee-mode)
-		(add-to-list 'ac-modes   'web-mode)
-		(add-to-list 'ac-modes   'js2-mode)
-    (add-to-list 'ac-sources 'ac-source-semantic) ;; искать автодополнения в CEDET
-    (add-to-list 'ac-sources 'ac-source-variables) ;; среди переменных
-    (add-to-list 'ac-sources 'ac-source-functions) ;; в названиях функций
-    (add-to-list 'ac-sources 'ac-source-dictionary) ;; в той папке где редактируемый буфер
-    (add-to-list 'ac-sources 'ac-source-words-in-all-buffer) ;; по всему буферу
-    (add-to-list 'ac-sources 'ac-source-files-in-current-dir))
-
-(ac-init)
 
 ;; Inhibit startup/splash screen
 (setq inhibit-splash-screen   t)
@@ -79,15 +77,7 @@
 (electric-indent-mode -1) ;; отключить индентацию  electric-indent-mod'ом (default in Emacs-24.4)
 
 ;;Fringe
-(fringe-mode 10)
-
-;;Gitgutter
-(require 'git-gutter-fringe+)
-
-(git-gutter-fr+-minimal)
-(set-face-foreground 'git-gutter+-modified "yellow")
-(set-face-foreground 'git-gutter+-added    "green")
-(set-face-foreground 'git-gutter+-deleted  "red")
+;(fringe-mode 10)
 
 ;; Disable GUI components
 (scroll-bar-mode -1)
@@ -104,9 +94,9 @@
 
 ;; Indent tabs
 ;;(setq-default indent-tabs-mode nil)
-(setq-default tab-width 2)
-(setq-default c-basic-offset 2)
-(setq-default standard-indent 2)
+(setq-default tab-width 4)
+(setq-default c-basic-offset 4)
+(setq-default standard-indent 4)
 (setq-default
  ;; js2-mode
  js2-basic-offset 2
@@ -179,12 +169,21 @@
         (untabify (point-min) (point-max)))
     nil)
 
-;; Linum plugin
+;;==================== Linum plugin ======================;;
 (require 'linum)
 (line-number-mode   t)
 (global-linum-mode  t)
 (column-number-mode t)
-(setq linum-format " %d")
+;(setq linum-format " %d")
+(defadvice linum-update-window (around linum-dynmaic activate)
+  (let* ((w (length (number-to-string
+					 (count-lines (point-min) (point-max)))))
+		 (linum-format (concat " %" (number-to-string w) "d ")))
+	ad-do-it))
+(setq whitespace-style '(trailing space tab-mark line indention column hspace tab))
+(autoload 'whitespace-toggle-options "whitespace" "Toggle local `whitespace-mode' options." t)
+
+
 
 ;; Powerline config
 (powerline-default-theme)
@@ -192,7 +191,6 @@
 (setq powerline-raw " ")
 (setq ns-use-srgb-colorspace nil)
 (setq powerline-arrow-shape 'curve)
-(setq powerline-default-separator-dir '(right . left))
 
 (require 'font-lock+)
 (require 'all-the-icons)
@@ -231,6 +229,8 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
 	 ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
+ '(ansi-term-color-vector
+	 [unspecified "#090300" "#db2d20" "#01a252" "#fded02" "#01a0e4" "#a16a94" "#01a0e4" "#a5a2a2"])
  '(compilation-message-face (quote default))
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#839496")
@@ -238,12 +238,11 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
 	 (quote
-		("3de3f36a398d2c8a4796360bfce1fa515292e9f76b655bb9a377289a6a80a132" "eae831de756bb480240479794e85f1da0789c6f2f7746e5cc999370bbc8d9c8a" "85e6bb2425cbfeed2f2b367246ad11a62fb0f6d525c157038a0d0eaaabc1bfee" "d5b121d69e48e0f2a84c8e4580f0ba230423391a78fcb4001ccb35d02494d79e" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d9129a8d924c4254607b5ded46350d68cc00b6e38c39fc137c3cfb7506702c12" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "b97a01622103266c1a26a032567e02d920b2c697ff69d40b7d9956821ab666cc" default)))
- '(global-git-gutter+-mode t)
+		("87d46d0ad89557c616d04bef34afd191234992c4eb955ff3c60c6aa3afc2e5cc" "b3bcf1b12ef2a7606c7697d71b934ca0bdd495d52f901e73ce008c4c9825a3aa" "3de3f36a398d2c8a4796360bfce1fa515292e9f76b655bb9a377289a6a80a132" "eae831de756bb480240479794e85f1da0789c6f2f7746e5cc999370bbc8d9c8a" "85e6bb2425cbfeed2f2b367246ad11a62fb0f6d525c157038a0d0eaaabc1bfee" "d5b121d69e48e0f2a84c8e4580f0ba230423391a78fcb4001ccb35d02494d79e" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d9129a8d924c4254607b5ded46350d68cc00b6e38c39fc137c3cfb7506702c12" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "b97a01622103266c1a26a032567e02d920b2c697ff69d40b7d9956821ab666cc" default)))
  '(helm-mode t)
  '(package-selected-packages
 	 (quote
-		(base16-theme blackboard-theme popwin ranger flycheck js2-mode json-mode helm haskell-mode php-mode badwolf-theme solarized-theme kotlin-mode fringe-helper git-gutter-fringe+ monokai-theme spacemacs-theme git-gutter+ font-lock+ emmet-mode web-mode all-the-icons powerline jsx-mode coffee-mode goto-last-change evil neotree dracula-theme ## tagedit smex rainbow-delimiters projectile paredit magit ido-ubiquitous exec-path-from-shell clojure-mode-extra-font-locking cider)))
+		(direx org-bullets dirtree base16-theme blackboard-theme popwin ranger flycheck js2-mode json-mode helm haskell-mode php-mode badwolf-theme solarized-theme kotlin-mode fringe-helper git-gutter-fringe+ monokai-theme spacemacs-theme git-gutter+ font-lock+ emmet-mode web-mode all-the-icons powerline jsx-mode coffee-mode goto-last-change evil neotree dracula-theme ## tagedit smex rainbow-delimiters projectile paredit magit ido-ubiquitous exec-path-from-shell clojure-mode-extra-font-locking cider)))
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil))
 (custom-set-faces
@@ -252,3 +251,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'scroll-left 'disabled nil)
